@@ -33,16 +33,21 @@
 
     <section id="ex1">
       <h2>Æfing 1 – Samfallandi spurningar (Accordion)</h2>
-      <button class="q" onclick="toggleAnswer(this)">Hvað er DOM?</button>
+      <button class="q" onclick="toggleAnswer(event)">Hvað er DOM?</button>
       <div class="a" style="display: none">Svar hér…</div>
-      <button class="q" onclick="toggleAnswer(this)">Hvað er event?</button>
+      <button class="q" onclick="toggleAnswer(event)">Hvað er event?</button>
       <div class="a" style="display: none">Svar hér…</div>
       <script>
         // TODO:
         // 1) Finndu öll .q takka, bættu click event listenersem sýnir/felur næsta systkini (.a)
         //    með því að toggla t.d. element.style.display = 'none' / 'block'.
-        function toggleAnswer(button) {
+        function toggleAnswer(e) {
           // vantar kóða hér
+          const button = e.target
+          const answer = button.nextelementSibling
+
+          let isHidden = answer.style.display === "none" || !answer.style.display
+          answer.style.display = isHidden ? "block" : "none"
         }
       </script>
     </section>
