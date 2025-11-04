@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="is">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tímaverkefni – DOM æfingar</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        line-height: 1.6;
+      }
+      section {
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+      }
+      button {
+        margin-top: 10px;
+      }
+      ul {
+        list-style-type: disc;
+        margin-left: 20px;
+      }
+      input {
+        padding: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Tímaverkefni – Nýjar DOM æfingar</h1>
+
+    <section id="ex1">
+      <h2>Æfing 1 – Samfallandi spurningar (Accordion)</h2>
+      <button class="q" onclick="toggleAnswer(event)">Hvað er DOM?</button>
+      <div class="a" style="display: none">Svar hér…</div>
+      <button class="q" onclick="toggleAnswer(event)">Hvað er event?</button>
+      <div class="a" style="display: none">Svar hér…</div>
+
+      <script>
+        function toggleAnswer(e) {
+          const button = e.target; // Get the clicked button
+          const answer = button.nextElementSibling; // Find the next .a div
+          if (!answer) return;
+
+          const isHidden =
+            answer.style.display === "none" || !answer.style.display;
+          answer.style.display = isHidden ? "block" : "none";
+        }
+      </script>
+    </section>
+
+    <section id="ex2">
+      <h2>Æfing 2 – Flipar (Tabs)</h2>
+      <div>
+        <button data-tab="one">Flipi 1</button>
+        <button data-tab="two">Flipi 2</button>
+        <button data-tab="three">Flipi 3</button>
+      </div>
+      <div id="panel-one">Efni fyrir flipa 1</div>
+      <div id="panel-two" style="display: none">Efni fyrir flipa 2</div>
+      <div id="panel-three" style="display: none">Efni fyrir flipa 3</div>
+      <script>
+        // Tabs lausn
+        const panels = {
+          one: document.getElementById("panel-one"),
+          two: document.getElementById("panel-two"),
+          three: document.getElementById("panel-three"),
+        };
+        function showPanel(key) {
+          Object.values(panels).forEach((p) => (p.style.display = "none"));
+          if (panels[key]) panels[key].style.display = "block";
+        }
+        document.querySelectorAll("#ex2 [data-tab]").forEach((btn) => {
+          btn.addEventListener("click", () => showPanel(btn.dataset.tab));
+        });
+      </script>
+    </section>
+
+    <section id="ex3">
+      <h2>Æfing 3 – Stafafjöldi og hámark</h2>
+
+      <textarea
+        id="msg"
+        rows="4"
+        placeholder="Skrifaðu skilaboð…"
+        oninput="updateCount()"
+      ></textarea>
+      <p><span id="count">0</span>/100</p>
+
+      <script>
+        const msg = document.getElementById("msg");
+        const countEl = document.getElementById("count");
+        const MAX = 100;
+
+        function updateCount() {
+          let v = msg.value;
+          if (v.length > MAX) {
+            v = v.substring(0, MAX);
+            msg.value = v;
+          }
+          countEl.textContent = v.length;
+          countEl.style.color = v.length >= MAX ? "red" : "";
+        }
+
+        updateCount(); // initialize count on page load
+      </script>
+    </section>
+
+    <section id="ex6">
+      <h2>Æfing 6 – RGB sleðar</h2>
+      <input id="r" type="range" min="0" max="255" value="128" /> R
+      <input id="g" type="range" min="0" max="255" value="128" /> G
+      <input id="b" type="range" min="0" max="255" value="128" /> B
+      <div
+        id="preview"
+        style="width: 120px; height: 60px; border: 1px solid #ccc"
+      ></div>
+      <script>
+        // RGB sleðar lausn
+        const r = document.getElementById("r");
+        const g = document.getElementById("g");
+        const b = document.getElementById("b");
+        const preview = document.getElementById("preview");
+        function updateRGB() {
+          const rv = r.value,
+            gv = g.value,
+            bv = b.value;
+          const color = `rgb(${rv}, ${gv}, ${bv})`;
+          preview.style.backgroundColor = color;
+          preview.title = color;
+        }
+        [r, g, b].forEach((el) => el.addEventListener("input", updateRGB));
+        updateRGB();
+      </script>
+    </section>
+
+    <section id="ex7">
+      <h2>Æfing 7 – Stoppuúr</h2>
+      <p id="time">00:00.0</p>
+      <button id="start" onclick="start()">Start</button>
+      <button id="stop" onclick="pause()">Stop</button>
+      <button id="reset" onclick="resetTimer()">Reset</button>
+      <script>
+        let timerId = null;
+        let tenths = 0; // 1 tenth = 100 ms
+
+        function showTime() {
+          const totalSeconds = Math.floor(tenths / 10);
+          const minutes = Math.floor(totalSeconds / 60);
+          const seconds = totalSeconds % 60;
+          const mm = String(minutes).padStart(2, "0");
+          const ss = String(seconds).padStart(2, "0");
+          document.getElementById("time").textContent = `${mm}:${ss}.${
+            tenths % 10
+          }`;
+        }
+
+        function tick() {
+          tenths++;
+          showTime();
+        }
+
+        function start() {
+          if (!timerId) {
+            timerId = setInterval(tick, 100); // every 100 ms = 1 tenth
+          } // already running
+          return;
+        }
+
+        function pause() {
+          clearInterval(timerId);
+          timerId = null;
+        }
+
+        function resetTimer() {
+          pause();
+          tenths = 0;
+          showTime();
+        }
+
+        showTime(); // initialize display
+      </script>
+    </section>
+
+    <section id="ex8">
+      <h2>Æfing 8 – Draga box</h2>
+      <div
+        id="area"
+        style="position: relative; height: 160px; border: 1px dashed #999"
+      >
+        <div
+          id="box"
+          style="
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            width: 40px;
+            height: 40px;
+            background: #10b981;
+          "
+        ></div>
+      </div>
+      <script>
+        // Draga box lausn
+        const area = document.getElementById("area");
+        const box = document.getElementById("box");
+        let dragging = false;
+        let offsetX = 0;
+        let offsetY = 0;
+        function clamp(val, min, max) {
+          return Math.max(min, Math.min(max, val));
+        }
+        box.addEventListener("mousedown", (e) => {
+          dragging = true;
+          offsetX = e.clientX - box.offsetLeft;
+          offsetY = e.clientY - box.offsetTop;
+          document.addEventListener("mousemove", onMove);
+          document.addEventListener("mouseup", onUp, { once: true });
+        });
+        function onMove(e) {
+          if (!dragging) return;
+          const maxX = area.clientWidth - box.offsetWidth;
+          const maxY = area.clientHeight - box.offsetHeight;
+          const left = clamp(e.clientX - offsetX, 0, maxX);
+          const top = clamp(e.clientY - offsetY, 0, maxY);
+          box.style.left = left + "px";
+          box.style.top = top + "px";
+        }
+        function onUp() {
+          dragging = false;
+          document.removeEventListener("mousemove", onMove);
+        }
+      </script>
+    </section>
+  </body>
+</html>
