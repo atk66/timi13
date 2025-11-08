@@ -39,12 +39,13 @@
       <div class="a" style="display: none">Svar hér…</div>
       <script>
         // TODO:
-        // 1) Finndu öll .q takka, bættu click event listenersem sýnir/felur næsta systkini (.a)
+        // 1) Finndu öll .q takka, bættu click event listener sem sýnir/felur næsta systkini (.a)
         //    með því að toggla t.d. element.style.display = 'none' / 'block'.
         function toggleAnswer(e) {
           // vantar kóða hér
-          const button = e.target
-          const answer = button.nextelementSibling
+          const button = e.target;
+          const answer = button.nextelementSibling;
+          if(!answer) return;
 
           let isHidden = answer.style.display === "none" || !answer.style.display
           answer.style.display = isHidden ? "block" : "none"
@@ -60,6 +61,20 @@
         // TODO:
         // 1) Á "input": uppfærðu #count með fjölda stafa í #msg.
         // 2) Ef length > 100: lita textann rauðan og banna fleiri stafi (t.d. með substring(0, MAX); þar sem MAX = 100).
+      const message = getElementById ("msg");
+      const countE1 = getElementById ("count");
+      const MAX = 100;
+
+      function updateCount () {
+        let v = msg.value;
+        if (v.length > MAX) {
+          v = v.substring (0 , MAX);
+          msg.value = v;
+        }
+        countE1.textContent = v.length;
+        countE1.style.color = v.length >= MAX ? "red" : "";
+      }
+      updateCount();
       </script>
     </section>
 
@@ -89,6 +104,25 @@
             tenths++;
             showTime();
           }
+
+          function start () {
+            if (!timerId) {
+              timerId= setInterval(tick, 100);
+            }
+            return;
+          }
+          function pause() {
+          clearInterval(timerId);
+          timerId = null;
+        }
+
+        function resetTimer() {
+          pause();
+          tenths = 0;
+          showTime();
+        }
+
+       
           /// Bæðtið fyrir neðan
 
           ////  Bætið fyrir ofan
@@ -97,6 +131,7 @@
         }
       </script>
     </section>
+    
     <section id="ex4">
       <h2>Æfing 4 – Flipar (Tabs)</h2>
       <div>
